@@ -23,53 +23,49 @@ Zeek monitored the traffic and logged the results in `conn.log`.
 **Kali VM (Attacker):**
 ```bash
 nmap 10.0.2.15
-Ubuntu VM (Monitor):
+```
 
-bash
-Copy
-Edit
+**Ubuntu VM (Monitor):**
+```bash
 cat /opt/zeek/logs/current/conn.log | zeek-cut ts id.orig_h id.resp_h id.resp_p service conn_state | grep 10.0.2.4
-Findings:
+```
 
-Log entries displayed a connection state of REJ for closed ports.
+**Findings:**  
+- Log entries displayed a connection state of `REJ` for closed ports.  
+- The single open port `22/tcp` showed `RSTO`.  
+- This confirmed Zeek correctly logged low-level connection events.
 
-The single open port 22/tcp showed RSTO.
+---
 
-This confirmed Zeek correctly logged low-level connection events.
+## SSH Brute-Force and Analysis
 
-SSH Brute-Force and Analysis
-An SSH brute-force attack was performed from Kali to Debian using Hydra.
-The goal was to inspect the ssh.log for suspicious attempts.
+An **SSH brute-force attack** was performed from Kali to Debian using Hydra.  
+The goal was to inspect the `ssh.log` for suspicious attempts.
 
-Kali VM (Attacker):
-
-bash
-Copy
-Edit
+**Kali VM (Attacker):**
+```bash
 hydra -l jaypark722 -P passlist.txt ssh://10.0.2.15
-Ubuntu VM (Monitor):
+```
 
-bash
-Copy
-Edit
+**Ubuntu VM (Monitor):**
+```bash
 tail /opt/zeek/logs/current/ssh.log | zeek-cut ts id.orig_h id.resp_h auth_success user
-Findings:
+```
 
-The ssh.log file showed numerous entries with auth_success = F (False).
+**Findings:**  
+- The `ssh.log` file showed numerous entries with `auth_success = F` (False).  
+- This indicated repeated failed login attempts from `10.0.2.4`.  
+- Zeek correctly logged the brute-force activity.
 
-This indicated repeated failed login attempts from 10.0.2.4.
+---
 
-Zeek correctly logged the brute-force activity.
+## Custom Scripting and Detection
 
-Custom Scripting and Detection
-The final task was to write a Zeek script to detect brute-force attacks.
-A script named detect-brute-force.zeek was created and added to Zeek's configuration.
+The final task was to write a Zeek script to detect brute-force attacks.  
+A script named **`detect-brute-force.zeek`** was created and added to Zeek's configuration.
 
-Script Code:
-
-zeek
-Copy
-Edit
+**Script Code:**
+```zeek
 @load base/frameworks/notice
 
 const brute_force_threshold = 5;
@@ -90,27 +86,29 @@ event ssh_login_failure(c: connection, version: string, auth_attempts: count,
         }
     }
 }
-Troubleshooting Note
-A technical issue prevented the script from generating the final notice.log entry.
+```
 
-However, testing confirmed the logic was correct.
+---
 
-The script was designed to generate a notice after 5+ failed login attempts from the same IP.
+### Troubleshooting Note
+- A technical issue prevented the script from generating the final `notice.log` entry.  
+- However, testing confirmed the logic was correct.  
+- The script was designed to generate a notice after **5+ failed login attempts** from the same IP.
 
-Expected Output (notice.log):
-
-php
-Copy
-Edit
+**Expected Output (`notice.log`):**
+```
 1756108554.824979	C6RDfZqi7THtYlh92	zeek::notice::SSH::Brute_Force	Possible SSH brute-force attack detected from 10.0.2.4
-Conclusion
-This lab successfully demonstrated the power of Zeek as a network security monitoring tool.
+```
 
-Nmap traffic was captured and analyzed through conn.log.
+---
 
-Hydra brute-force attempts were identified in ssh.log.
+## Conclusion
 
-A custom Zeek script was developed to detect brute-force attacks.
+This lab successfully demonstrated the power of **Zeek** as a network security monitoring tool.  
 
-Despite troubleshooting hurdles, this exercise highlighted how Zeek can be extended with custom scripts to detect malicious activity in real time.
+- **Nmap traffic** was captured and analyzed through `conn.log`.  
+- **Hydra brute-force attempts** were identified in `ssh.log`.  
+- A **custom Zeek script** was developed to detect brute-force attacks.  
+
+Despite troubleshooting hurdles, this exercise highlighted how Zeek can be extended with custom scripts to detect malicious activity in real time.  
 Zeek proved to be a valuable tool for moving beyond packet-level analysis and identifying higher-level security events.
