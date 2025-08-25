@@ -1,4 +1,4 @@
-# Cybersecurity Lab Report: Network Traffic Analysis with Zeek
+# Network Traffic Analysis with Zeek
 
 This project documents a hands-on lab exercise demonstrating how to use **Zeek** for network security monitoring.  
 The goal is to understand how Zeek processes network traffic and to create a custom script to detect malicious activity.
