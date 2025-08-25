@@ -10,7 +10,7 @@ The goal is to understand how Zeek processes network traffic and to create a cus
 The lab was conducted using three virtual machines on an isolated **Host-Only network** to ensure a controlled environment:
 
 - **Attacker VM**: Kali Linux `10.0.2.4`  
-- **Monitoring VM**: Ubuntu `10.0.2.?` (Zeek sensor deployed)  
+- **Monitoring VM**: Ubuntu `10.0.2.5` (Zeek sensor deployed)  
 - **Victim VM**: Debian `10.0.2.15` (target of network attacks)  
 
 ---
