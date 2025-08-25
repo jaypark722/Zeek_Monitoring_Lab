@@ -17,3 +17,6 @@ An Nmap scan was performed from the Kali VM to the Debian victim. Zeek was confi
 **Command to run on Kali VM:**
 ```bash
 nmap 10.0.2.15
+```
+Command to run on Ubuntu VM:
+
