@@ -15,8 +15,12 @@ An Nmap scan was performed from the Kali VM to the Debian victim. Zeek was confi
 
 Command to run on Kali VM:
 
+Bash
+
 nmap 10.0.2.15
 Command to run on Ubuntu VM:
+
+Bash
 
 cat /opt/zeek/logs/current/conn.log | zeek-cut ts id.orig_h id.resp_h id.resp_p service conn_state | grep 10.0.2.4
 Findings:
@@ -27,8 +31,12 @@ An SSH brute-force attack was performed from the Kali VM to the Debian VM using 
 
 Command to run on Kali VM:
 
+Bash
+
 hydra -l jaypark722 -P passlist.txt ssh://10.0.2.15
 Command to run on Ubuntu VM:
+
+Bash
 
 tail /opt/zeek/logs/current/ssh.log | zeek-cut ts id.orig_h id.resp_h auth_success user
 Findings:
@@ -38,6 +46,8 @@ The raw ssh.log file was successfully analyzed. The logs showed numerous entries
 The final task was to write a Zeek script to detect the brute-force attack. A custom script named detect-brute-force.zeek was created and loaded into Zeek's configuration.
 
 Script Code:
+
+Code snippet
 
 @load base/frameworks/notice
 
