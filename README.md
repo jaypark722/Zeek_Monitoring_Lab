@@ -19,11 +19,12 @@ An Nmap scan was performed from the Kali VM to the Debian victim. Zeek was confi
 **Command to run on Kali VM:**
 ```bash
 nmap 10.0.2.15
+```
 Command to run on Ubuntu VM:
 
-Bash
-
+```bash
 cat /opt/zeek/logs/current/conn.log | zeek-cut ts id.orig_h id.resp_h id.resp_p service conn_state | grep 10.0.2.4
+```
 Findings:
 The analysis of the conn.log successfully showed the Nmap scan traffic. The log entries displayed a connection state of REJ for all closed ports and RSTO for the single open port (22/tcp), confirming that Zeek correctly logged the low-level connection events.
 
@@ -32,14 +33,15 @@ An SSH brute-force attack was performed from the Kali VM to the Debian VM using 
 
 Command to run on Kali VM:
 
-Bash
-
+```bash
 hydra -l jaypark722 -P passlist.txt ssh://10.0.2.15
+```
+
 Command to run on Ubuntu VM:
 
-Bash
-
+```bash
 tail /opt/zeek/logs/current/ssh.log | zeek-cut ts id.orig_h id.resp_h auth_success user
+```
 Findings:
 The raw ssh.log file was successfully analyzed. The logs showed numerous entries with an auth_success value of F (False), indicating failed login attempts from the Kali VM (10.0.2.4). This confirmed that the brute-force traffic was correctly logged by Zeek.
 
